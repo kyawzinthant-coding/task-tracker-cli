@@ -1,0 +1,2 @@
+test-run:
+	cd cli && go test -v
