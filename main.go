@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"strconv"
 	"task-cli/cli"
 	"task-cli/storage"
 	task "task-cli/tasks"
@@ -27,8 +28,28 @@ func main() {
 
 	switch command.Name {
 	case "add":
-		task := taskService.AddTask(command.Args[0])
+		task, err := taskService.AddTask(command.Args[0])
+		if err != nil {
+			fmt.Println("Error", err)
+			return
+		}
 		fmt.Println("AddTask", task.ID)
+	case "list":
+		tasks, err := taskService.ListTasks()
+		if err != nil {
+			fmt.Println("Error", err)
+		}
+		cli.PrintTasks(tasks)
+	case "delete":
+		id, err := strconv.Atoi(command.Args[0])
+		if err != nil {
+			fmt.Println("Error: id must be a number")
+			return
+		}
+		err = taskService.DeleteTask(id)
+		if err != nil {
+			fmt.Println("Error", err)
+		}
 	default:
 		fmt.Println("Unknown command")
 	}

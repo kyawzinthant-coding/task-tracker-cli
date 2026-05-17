@@ -1,6 +1,7 @@
 package tasks
 
 import (
+	"errors"
 	"time"
 )
 
@@ -35,7 +36,7 @@ func NewService(store Store) *Service {
 	}
 }
 
-func (s *Service) AddTask(description string) Task {
+func (s *Service) AddTask(description string) (Task, error) {
 	task := Task{
 		ID:          s.nextID,
 		Description: description,
@@ -46,6 +47,34 @@ func (s *Service) AddTask(description string) Task {
 
 	s.tasks = append(s.tasks, task)
 	s.nextID++
-	s.storage.Save(s.tasks)
-	return task
+	err := s.storage.Save(s.tasks)
+	if err != nil {
+		return Task{}, err
+	}
+	return task, nil
+}
+
+func (s *Service) ListTasks() ([]Task, error) {
+	return s.tasks, nil
+}
+
+func (s *Service) DeleteTask(id int) error {
+	found := false
+
+	newTasks := []Task{}
+
+	for _, t := range s.tasks {
+		if t.ID == id {
+			found = true
+			continue
+		}
+		newTasks = append(newTasks, t)
+	}
+
+	if !found {
+		return errors.New("task not found")
+	}
+
+	s.tasks = newTasks
+	return s.storage.Save(s.tasks)
 }
