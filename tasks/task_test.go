@@ -2,8 +2,22 @@ package tasks
 
 import "testing"
 
+type mockStorage struct {
+	saved []Task
+}
+
+func (m *mockStorage) Load() ([]Task, error) {
+	return []Task{}, nil
+}
+
+func (m *mockStorage) Save(task []Task) error {
+	m.saved = task
+	return nil
+}
+
 func TestAddTask(t *testing.T) {
-	s := NewService()
+	store := &mockStorage{}
+	s := NewService(store)
 
 	task := s.AddTask("buy milk")
 
@@ -19,7 +33,7 @@ func TestAddTask(t *testing.T) {
 		t.Errorf("expected status todo, got %s", task.Status)
 	}
 
-	if len(s.tasks) != 1 {
-		t.Errorf("expected 1 task in service, got %d", len(s.tasks))
+	if (len(store.saved) != 1) || (store.saved[0].Description != "buy milk") {
+		t.Errorf("expected saved tasks to contain 1 task, got %d", len(store.saved))
 	}
 }

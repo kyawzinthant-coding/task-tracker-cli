@@ -4,9 +4,14 @@ import (
 	"fmt"
 	"os"
 	"task-cli/cli"
+	"task-cli/storage"
+	task "task-cli/tasks"
 )
 
 func main() {
+
+	store := storage.NewStorage("task.json")
+	taskService := task.NewService(store)
 
 	command, err := cli.ParseCommand(os.Args)
 	if err != nil {
@@ -22,7 +27,8 @@ func main() {
 
 	switch command.Name {
 	case "add":
-		fmt.Println("Add")
+		task := taskService.AddTask(command.Args[0])
+		fmt.Println("AddTask", task.ID)
 	default:
 		fmt.Println("Unknown command")
 	}
