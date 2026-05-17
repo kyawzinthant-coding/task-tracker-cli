@@ -1,16 +1,37 @@
 package tasks
 
-import "time"
+import (
+	"time"
+)
 
-type Service struct {
-	tasks  []Task
-	nextID int
+type Store interface {
+	Load() ([]Task, error)
+	Save([]Task) error
 }
 
-func NewService() *Service {
+type Service struct {
+	tasks   []Task
+	nextID  int
+	storage Store
+}
+
+func NewService(store Store) *Service {
+	tasks, err := store.Load()
+	if err != nil {
+		panic(err)
+	}
+
+	nextID := 1
+	for _, t := range tasks {
+		if t.ID >= nextID {
+			nextID = t.ID + 1
+		}
+	}
+
 	return &Service{
-		tasks:  []Task{},
-		nextID: 1,
+		tasks:   tasks,
+		nextID:  nextID,
+		storage: store,
 	}
 }
 
@@ -25,5 +46,6 @@ func (s *Service) AddTask(description string) Task {
 
 	s.tasks = append(s.tasks, task)
 	s.nextID++
+	s.storage.Save(s.tasks)
 	return task
 }
