@@ -68,3 +68,38 @@ func TestListTask(t *testing.T) {
 	}
 
 }
+
+func TestRemoveTask(t *testing.T) {
+	store := &mockStorage{
+		saved: []Task{
+			{
+				ID:          1,
+				Description: "buy milk",
+				Status:      "Todo",
+			},
+			{
+				ID:          2,
+				Description: "buy book",
+				Status:      "Done",
+			},
+		},
+	}
+
+	s := NewService(store)
+
+	err := s.DeleteTask(1)
+	if err != nil {
+		t.Errorf("Error removing task: %s", err)
+	}
+	list, err := s.ListTasks()
+	if err != nil {
+		t.Errorf("Error listing tasks: %s", err)
+	}
+	if len(list) != 1 {
+		t.Errorf("expected 1 task, got %d", len(list))
+	}
+
+	if list[0].ID != 2 {
+		t.Errorf("expected ID 2, got %d", list[0].ID)
+	}
+}
