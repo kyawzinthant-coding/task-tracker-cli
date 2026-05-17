@@ -35,7 +35,7 @@ func main() {
 		}
 		fmt.Println("AddTask", task.ID)
 	case "list":
-		tasks, err := taskService.ListTasks()
+		tasks, err := taskService.ListTasks(command.Args[0])
 		if err != nil {
 			fmt.Println("Error", err)
 		}

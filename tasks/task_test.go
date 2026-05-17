@@ -54,19 +54,52 @@ func TestListTask(t *testing.T) {
 				Description: "buy book",
 				Status:      "Done",
 			},
+			{
+				ID:          3,
+				Description: "buy CD",
+				Status:      "in-progress",
+			},
 		},
 	}
 	s := NewService(store)
 
-	list, err := s.ListTasks()
-	if err != nil {
-		t.Errorf("Error listing tasks: %s", err)
-	}
+	t.Run("Done Task", func(t *testing.T) {
+		tasks, err := s.ListTasks("Done")
+		if err != nil {
+			t.Errorf("Error listing tasks: %s", err)
+		}
 
-	if len(list) != 2 {
-		t.Errorf("expected 2 tasks, got %d", len(list))
-	}
+		for _, task := range tasks {
+			if task.Status != Done {
+				t.Errorf("expected status done, got %s", task.Status)
+			}
+		}
+	})
 
+	t.Run("in-progress Task", func(t *testing.T) {
+		tasks, err := s.ListTasks("in-progress")
+		if err != nil {
+			t.Errorf("Error listing tasks: %s", err)
+		}
+
+		for _, task := range tasks {
+			if task.Status != InProgress {
+				t.Errorf("expected status done, got %s", task.Status)
+			}
+		}
+	})
+
+	t.Run("all", func(t *testing.T) {
+		tasks, err := s.ListTasks("")
+		if err != nil {
+			t.Errorf("Error listing tasks: %s", err)
+		}
+
+		if len(tasks) != 3 {
+			t.Errorf("expected 2 tasks, got %d", len(tasks))
+		}
+
+	})
 }
 
 func TestRemoveTask(t *testing.T) {

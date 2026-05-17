@@ -54,8 +54,20 @@ func (s *Service) AddTask(description string) (Task, error) {
 	return task, nil
 }
 
-func (s *Service) ListTasks() ([]Task, error) {
-	return s.tasks, nil
+func (s *Service) ListTasks(status ...string) ([]Task, error) {
+
+	if len(status) == 0 || status[0] == "" {
+		return s.tasks, nil
+	}
+
+	filteredTask := []Task{}
+	for _, t := range s.tasks {
+		if string(t.Status) == status[0] {
+			filteredTask = append(filteredTask, t)
+		}
+	}
+	return filteredTask, nil
+
 }
 
 func (s *Service) DeleteTask(id int) error {
