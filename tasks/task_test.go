@@ -7,7 +7,7 @@ type mockStorage struct {
 }
 
 func (m *mockStorage) Load() ([]Task, error) {
-	return []Task{}, nil
+	return m.saved, nil
 }
 
 func (m *mockStorage) Save(task []Task) error {
@@ -19,7 +19,10 @@ func TestAddTask(t *testing.T) {
 	store := &mockStorage{}
 	s := NewService(store)
 
-	task := s.AddTask("buy milk")
+	task, err := s.AddTask("buy milk")
+	if err != nil {
+		t.Errorf("Error adding task: %s", err)
+	}
 
 	if task.ID != 1 {
 		t.Errorf("expected ID 1, got %d", task.ID)
@@ -36,4 +39,32 @@ func TestAddTask(t *testing.T) {
 	if (len(store.saved) != 1) || (store.saved[0].Description != "buy milk") {
 		t.Errorf("expected saved tasks to contain 1 task, got %d", len(store.saved))
 	}
+}
+
+func TestListTask(t *testing.T) {
+	store := &mockStorage{
+		saved: []Task{
+			{
+				ID:          1,
+				Description: "buy milk",
+				Status:      "Todo",
+			},
+			{
+				ID:          2,
+				Description: "buy book",
+				Status:      "Done",
+			},
+		},
+	}
+	s := NewService(store)
+
+	list, err := s.ListTasks()
+	if err != nil {
+		t.Errorf("Error listing tasks: %s", err)
+	}
+
+	if len(list) != 2 {
+		t.Errorf("expected 2 tasks, got %d", len(list))
+	}
+
 }

@@ -27,8 +27,18 @@ func main() {
 
 	switch command.Name {
 	case "add":
-		task := taskService.AddTask(command.Args[0])
+		task, err := taskService.AddTask(command.Args[0])
+		if err != nil {
+			fmt.Println("Error", err)
+			return
+		}
 		fmt.Println("AddTask", task.ID)
+	case "list":
+		tasks, err := taskService.ListTasks()
+		if err != nil {
+			fmt.Println("Error", err)
+		}
+		cli.PrintTasks(tasks)
 	default:
 		fmt.Println("Unknown command")
 	}
