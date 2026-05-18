@@ -50,6 +50,24 @@ func main() {
 		if err != nil {
 			fmt.Println("Error", err)
 		}
+	case "mark-in-progress":
+		id, err := strconv.Atoi(command.Args[0])
+		if err != nil {
+			fmt.Println("Error: id must be a number")
+		}
+		err = taskService.UpdateStatusInProgress(id)
+		if err != nil {
+			fmt.Println("Error", err)
+		}
+	case "mark-done":
+		id, err := strconv.Atoi(command.Args[0])
+		if err != nil {
+			fmt.Println("Error: id must be a number")
+		}
+		err = taskService.UpdateStatusDone(id)
+		if err != nil {
+			fmt.Println("Error", err)
+		}
 	default:
 		fmt.Println("Unknown command")
 	}

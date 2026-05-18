@@ -22,7 +22,14 @@ func (c Command) Validate() error {
 
 	case "list":
 		// no args needed
-
+	case "mark-in-progress":
+		if len(c.Args) < 1 {
+			return errors.New("missing task id")
+		}
+	case "mark-done":
+		if len(c.Args) < 1 {
+			return errors.New("missing task id")
+		}
 	default:
 		return errors.New("unknown command: " + c.Name)
 	}
