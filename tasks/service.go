@@ -90,3 +90,26 @@ func (s *Service) DeleteTask(id int) error {
 	s.tasks = newTasks
 	return s.storage.Save(s.tasks)
 }
+
+func (s *Service) UpdateStatusDone(id int) error {
+
+	for i := range s.tasks {
+		if s.tasks[i].ID == id {
+			s.tasks[i].Status = Done
+			break
+		}
+	}
+
+	return s.storage.Save(s.tasks)
+}
+
+func (s *Service) UpdateStatusInProgress(id int) error {
+	for i := range s.tasks {
+		if s.tasks[i].ID == id {
+			s.tasks[i].Status = InProgress
+			break
+		}
+	}
+
+	return s.storage.Save(s.tasks)
+}
