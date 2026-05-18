@@ -136,3 +136,53 @@ func TestRemoveTask(t *testing.T) {
 		t.Errorf("expected ID 2, got %d", list[0].ID)
 	}
 }
+
+func TestStatusUpdate(t *testing.T) {
+	t.Run("Done Task", func(t *testing.T) {
+		store := &mockStorage{
+			saved: []Task{
+				{
+					ID:          1,
+					Description: "buy milk",
+					Status:      Todo,
+				},
+			},
+		}
+
+		s := NewService(store)
+
+		err := s.UpdateStatusDone(1)
+
+		if err != nil {
+			t.Fatalf("error updating status: %v", err)
+		}
+
+		if store.saved[0].Status != Done {
+			t.Errorf("expected status %s, got %s", Done, store.saved[0].Status)
+		}
+	})
+
+	t.Run("InProgress Task", func(t *testing.T) {
+		store := &mockStorage{
+			saved: []Task{
+				{
+					ID:          1,
+					Description: "buy milk",
+					Status:      Todo,
+				},
+			},
+		}
+
+		s := NewService(store)
+
+		err := s.UpdateStatusInProgress(1)
+
+		if err != nil {
+			t.Fatalf("error updating status: %v", err)
+		}
+
+		if store.saved[0].Status != InProgress {
+			t.Errorf("expected status %s, got %s", InProgress, store.saved[0].Status)
+		}
+	})
+}
