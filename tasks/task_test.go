@@ -47,12 +47,12 @@ func TestListTask(t *testing.T) {
 			{
 				ID:          1,
 				Description: "buy milk",
-				Status:      "Todo",
+				Status:      "todo",
 			},
 			{
 				ID:          2,
 				Description: "buy book",
-				Status:      "Done",
+				Status:      "done",
 			},
 			{
 				ID:          3,

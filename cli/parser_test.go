@@ -40,6 +40,20 @@ func TestParseCommand(t *testing.T) {
 			wantError: false,
 		},
 		{
+			name:      "mark-in-progress",
+			args:      []string{"task-cli", "mark-in-progress", "1"},
+			wantName:  "mark-in-progress",
+			wantArgs:  []string{"1"},
+			wantError: false,
+		},
+		{
+			name:      "mark-done",
+			args:      []string{"task-cli", "mark-done", "1"},
+			wantName:  "mark-done",
+			wantArgs:  []string{"1"},
+			wantError: false,
+		},
+		{
 			name:      "no command",
 			args:      []string{"task-cli"},
 			wantError: true,

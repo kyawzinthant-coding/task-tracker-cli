@@ -35,9 +35,14 @@ func main() {
 		}
 		fmt.Println("AddTask", task.ID)
 	case "list":
-		tasks, err := taskService.ListTasks(command.Args[0])
+		filter := ""
+		if len(command.Args) > 0 {
+			filter = command.Args[0]
+		}
+		tasks, err := taskService.ListTasks(filter)
 		if err != nil {
 			fmt.Println("Error", err)
+			return
 		}
 		cli.PrintTasks(tasks)
 	case "delete":
