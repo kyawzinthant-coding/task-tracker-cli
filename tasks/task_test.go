@@ -186,3 +186,28 @@ func TestStatusUpdate(t *testing.T) {
 		}
 	})
 }
+
+func TestUpdateTask(t *testing.T) {
+
+	store := &mockStorage{
+		saved: []Task{
+			{
+				ID:          1,
+				Description: "buy milk",
+				Status:      Todo,
+			},
+		},
+	}
+
+	s := NewService(store)
+
+	err := s.UpdateTask(1, "update PR")
+	if err != nil {
+		t.Fatalf("error updating status: %v", err)
+	}
+
+	if store.saved[0].Description != "update PR" {
+		t.Errorf("expected description 'update PR', got %s", store.saved[0].Description)
+	}
+
+}

@@ -113,3 +113,12 @@ func (s *Service) UpdateStatusInProgress(id int) error {
 
 	return s.storage.Save(s.tasks)
 }
+
+func (s *Service) UpdateTask(id int, description string) error {
+	for i := range s.tasks {
+		if s.tasks[i].ID == id {
+			s.tasks[i].Description = description
+		}
+	}
+	return s.storage.Save(s.tasks)
+}

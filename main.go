@@ -68,6 +68,16 @@ func main() {
 		if err != nil {
 			fmt.Println("Error", err)
 		}
+	case "update":
+		id, err := strconv.Atoi(command.Args[0])
+		if err != nil {
+			fmt.Println("Error: id must be a number")
+		}
+		desc := command.Args[1]
+		err = taskService.UpdateTask(id, desc)
+		if err != nil {
+			fmt.Println("Error", err)
+		}
 	default:
 		fmt.Println("Unknown command")
 	}
